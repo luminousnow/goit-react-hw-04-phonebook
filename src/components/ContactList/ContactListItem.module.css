@@ -1,0 +1,27 @@
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 20px;
+  margin: 15px 15px;
+
+  border: 1px solid gray;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button {
+  padding: 3px;
+
+  font-size: 11px;
+
+  cursor: pointer;
+  text-transform: capitalize;
+  border-radius: 8px;
+}
+
+.button:hover {
+  font-weight: bold;
+  background-color: indigo;
+  color: aliceblue;
+}

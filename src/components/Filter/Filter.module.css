@@ -1,0 +1,13 @@
+.label {
+  display: grid;
+  margin: 15px 15px;
+}
+
+.input {
+  margin-top: 10px;
+  width: 400px;
+}
+
+span::first-letter {
+  text-transform: capitalize;
+}

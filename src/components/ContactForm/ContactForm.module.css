@@ -1,0 +1,28 @@
+.fieldset {
+  display: grid;
+}
+
+.label {
+  display: grid;
+  margin: 15px 0px;
+
+  font-weight: 700;
+}
+
+.input {
+  margin-top: 10px;
+  width: 400px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  padding: 10px;
+  width: 400px;
+}
+
+span::first-letter {
+  text-transform: capitalize;
+}
