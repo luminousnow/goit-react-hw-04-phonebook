@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList';
@@ -6,47 +6,35 @@ import Container from './components/Container';
 import Filter from './components/Filter/Filter';
 import Section from './components/Section/Section';
 
-class App extends Component {
-  state = {
-    contacts: [],
-    filter: '',
-  };
+function App() {
+  // === State === //
+  const [contacts, setContacts] = useState([]);
+  const [filter, setFilter] = useState('');
 
-  // читає дані з localStorage
-  componentDidMount() {
-    const contacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contacts);
+  // === LocalStorage === //
+  // getting data from LocalStorage
+  useEffect(() => {
+    // const contacts = window.localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(window.localStorage.getItem('contacts'));
 
-    // перевіряє чи не null
+    // getting data if it located there earlier and storage wasn't empty
     if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
+      setContacts(parsedContacts);
     }
-  }
+  }, []);
 
-  // оновлює дані в localStorage
-  componentDidUpdate(prevProps, prevState) {
-    // при відмінному state.contacts, оновлює localStorage
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
+  // set || update data in LocalStorage
+  useEffect(() => {
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
-  // видаляє контакт по кліку на кнопку Delete
-  deleteContact = contactId => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(cont => cont.id !== contactId),
-    }));
-  };
-
-  // отримує параметри з Форми, додає ІД, формує повноцінний контакт
-  addContact = ({ name, number }) => {
-    const { contacts } = this.state;
-
-    // створює контакт
+  // === Contacts === //
+  // create new contact (id, name, number)
+  const addContact = ({ name, number }) => {
     const id = uuidv4();
     const contact = { id, name, number };
 
-    // перевіряє чи відсутні дублі по імені
+    // verify input value is it duplicate
     if (
       contacts.find(
         oldContact => oldContact.name.toLowerCase() === name.toLowerCase(),
@@ -55,14 +43,25 @@ class App extends Component {
       return alert(`${name} is already in contact`);
     }
 
-    this.setState(prevState => ({
-      contacts: [contact, ...prevState.contacts],
-    }));
+    // add new contact to contacts
+    setContacts(prevState => [contact, ...prevState]);
   };
 
-  // фільтрує створені контакти
-  getFilteredContacts = () => {
-    const { contacts, filter } = this.state;
+  // delete contact by id (when Delete button is click)
+  const deleteContact = contactId => {
+    setContacts(prevState => prevState.filter(cont => cont.id !== contactId));
+  };
+
+  // === Filter === //
+  // write value to State when input is change
+  const changeFilter = e => {
+    const { value } = e.currentTarget;
+    setFilter(value);
+  };
+
+  // finde contact in contacs
+  const getFilteredContacts = () => {
+    // converting all char to lowercase
     const normalizeFilter = filter.toLowerCase();
 
     return contacts.filter(person =>
@@ -70,23 +69,8 @@ class App extends Component {
     );
   };
 
-  // пише значення в Стейт
-  changeFilter = e => {
-    const { name, value } = e.currentTarget;
-    this.setState({ [name]: value });
-  };
-
-  render() {
-    const { filter } = this.state;
-    const {
-      deleteContact,
-      addContact,
-      changeFilter,
-      getFilteredContacts,
-    } = this;
-    const filteredContacts = getFilteredContacts();
-
-    return (
+  return (
+    <>
       <Container>
         <Section>
           <h1>Phonebook</h1>
@@ -96,13 +80,13 @@ class App extends Component {
           <h2>Contacts</h2>
           <Filter filter={filter} changeFilter={changeFilter} />
           <ContactList
-            contactList={filteredContacts}
+            contactList={getFilteredContacts()}
             onDeleteContact={deleteContact}
           />
         </Section>
       </Container>
-    );
-  }
+    </>
+  );
 }
 
 export default App;
