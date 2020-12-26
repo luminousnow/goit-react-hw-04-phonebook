@@ -30,7 +30,7 @@ function App() {
 
   // === Contacts === //
   // create new contact (id, name, number)
-  const addContact = ({ name, number }) => {
+  const addContact = (name, number) => {
     const id = uuidv4();
     const contact = { id, name, number };
 
