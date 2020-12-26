@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import s from './ContactForm.module.css';
+import { func } from 'prop-types';
 
 function ContactForm({ getContactData }) {
   // === State === //
@@ -77,5 +78,9 @@ function ContactForm({ getContactData }) {
     </>
   );
 }
+
+ContactForm.propTypes = {
+  getContactData: func.isRequired,
+};
 
 export default ContactForm;
