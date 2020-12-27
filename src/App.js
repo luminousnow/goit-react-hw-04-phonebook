@@ -1,22 +1,16 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList';
 import Container from './components/Container';
 import Filter from './components/Filter/Filter';
 import Section from './components/Section/Section';
+import useLocalStorage from './components/Hooks/useLocalStorage';
 
 function App() {
-  // === State === //
-  const [contacts, setContacts] = useState(
-    JSON.parse(window.localStorage.getItem('contacts') ?? []),
-  );
-  const [filter, setFilter] = useState('');
-
-  // === Оновлює запис contacts в LocalStorage === //
-  useEffect(() => {
-    window.localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  // === user hooks === //
+  const [contacts, setContacts] = useLocalStorage('contacts', []);
+  const [filter, setFilter] = useLocalStorage('filter', '');
 
   // === Створює новий Контакт === //
   const addContact = (name, number) => {

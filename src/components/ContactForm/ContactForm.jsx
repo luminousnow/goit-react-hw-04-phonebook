@@ -3,15 +3,15 @@ import s from './ContactForm.module.css';
 import { func } from 'prop-types';
 
 function ContactForm({ getContactData }) {
-  // === State === //
+  // === useState hook === //
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  // === rerender input fields value === //
+  // === пише значення в useState === //
   const handleImputChange = e => {
     const { name, value } = e.currentTarget;
 
-    // verify & set value to State
+    // записує відповідне значення у відповідний useState
     switch (name) {
       case 'name':
         setName(value);
@@ -26,17 +26,16 @@ function ContactForm({ getContactData }) {
     }
   };
 
-  // on press submit button
+  // надсилає дані у Арр при Submit
   const onSubmitPress = e => {
     e.preventDefault();
 
-    // send values to State Арр.js
     getContactData(name, number);
 
     resetFormField();
   };
 
-  // clean up form fields after form submission
+  // чистить поля name, number
   const resetFormField = () => {
     setName('');
     setNumber('');
