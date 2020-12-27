@@ -8,60 +8,49 @@ import Section from './components/Section/Section';
 
 function App() {
   // === State === //
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(
+    JSON.parse(window.localStorage.getItem('contacts') ?? []),
+  );
   const [filter, setFilter] = useState('');
 
-  // === LocalStorage === //
-  // getting data from LocalStorage
-  useEffect(() => {
-    // const contacts = window.localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(window.localStorage.getItem('contacts'));
-
-    // getting data if it located there earlier and storage wasn't empty
-    if (parsedContacts) {
-      setContacts(parsedContacts);
-    }
-  }, []);
-
-  // set || update data in LocalStorage
+  // === Оновлює запис contacts в LocalStorage === //
   useEffect(() => {
     window.localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
-  // === Contacts === //
-  // create new contact (id, name, number)
+  // === Створює новий Контакт === //
   const addContact = (name, number) => {
     const id = uuidv4();
     const contact = { id, name, number };
 
-    // verify input value is it duplicate
+    // перевіряє введене ім'я на унікальність
     if (
       contacts.find(
         oldContact => oldContact.name.toLowerCase() === name.toLowerCase(),
       )
     ) {
+      // повідомлення при виявлені існуючого імені
       return alert(`${name} is already in contact`);
     }
 
-    // add new contact to contacts
+    // додає створений контакт до списку контактів
     setContacts(prevState => [contact, ...prevState]);
   };
 
-  // delete contact by id (when Delete button is click)
+  // === Видаляє контакт (клік на кнопці Delete) === //
   const deleteContact = contactId => {
     setContacts(prevState => prevState.filter(cont => cont.id !== contactId));
   };
 
-  // === Filter === //
-  // write value to State when input is change
+  // === Оновлює значення поля Filter у стейті === //
   const changeFilter = e => {
     const { value } = e.currentTarget;
     setFilter(value);
   };
 
-  // finde contact in contacs
+  // === Шукає контакт у списку контактів === //
   const getFilteredContacts = () => {
-    // converting all char to lowercase
+    // робить усі символи введені в поле фільтр з малої літери
     const normalizeFilter = filter.toLowerCase();
 
     return contacts.filter(person =>
